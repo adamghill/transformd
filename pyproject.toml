@@ -21,6 +21,21 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/adamghill/transformd"
 
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest",
+    "coverage[toml]",
+    "mypy",
+    "ruff",
+]
+
+[tool.rye.scripts]
+test = "pytest"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
