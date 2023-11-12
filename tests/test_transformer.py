@@ -1,6 +1,6 @@
 import pytest
 
-from transformd import DictionaryTransformer
+from transformd.transformer import DictionaryTransformer
 
 
 @pytest.fixture
