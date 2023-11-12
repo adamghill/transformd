@@ -4,13 +4,18 @@ Transform a `dictionary` to another `dictionary`, but keep the same shape based 
 
 ## What is a spec?
 
-It is a string (or sequence of strings) that specifies what "parts" of the dictionary should be included in a new `dictionary` that is returned from the `transform` function. A `spec` uses dot-notation to traverse into the `dictionary`. It can also use indexes if the object is a list.
+It is a string (or sequence of strings) that specifies which "parts" of the dictionary should be included or excluded in a new `dictionary` that is returned from the `transform` function.
+
+A `spec` uses dot-notation to specify how to traverse into the `dictionary`. It can also use indexes if the value of the `dictionary` is a list.
+
+Note: `Specs` are applied to the original `dictionary` in the order they are defined -- the `dictionary` gets updated after each spec.
 
 ## Examples
 
 ```python
 from transformd import Transformer
 
+# Initial `dictionary` we'll transform based on a spec below
 data = {
     "library": {
         "name": "Main St Library",
@@ -32,12 +37,14 @@ data = {
     }
 }
 
+# Only return a nested part of `data`
 assert Transformer(data).transform(spec="library.name") == {
     "library": {
         "name": "Main St Library"
     }
 }
 
+# Return multiple parts of `data`
 assert Transformer(data).transform(spec=("library.name", "library.location.state")) == {
     "library": {
         "name": "Main St Library",
@@ -47,6 +54,7 @@ assert Transformer(data).transform(spec=("library.name", "library.location.state
     }
 }
 
+# Return different parts of a nested list in `data`
 assert Transformer(data).transform(spec=("library.books.0.title", "library.books.1")) == {
     "library": {
         "books": [
@@ -60,6 +68,13 @@ assert Transformer(data).transform(spec=("library.books.0.title", "library.books
         ],
     }
 }
+
+# Exclude pieces from `data` by prefixing a spec with a dash
+assert Transformer(data).transform(spec=("-library.books", "-library.location")) == {
+        "library": {
+            "name": "Main St Library"
+        }
+    }
 ```
 
 ## Why?

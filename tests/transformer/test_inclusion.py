@@ -13,7 +13,8 @@ def test_nested(transformer):
         }
     }
 
-    actual = transformer.transform(spec=("library.location",))
+    spec = ("library.location",)
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
 
@@ -21,7 +22,8 @@ def test_nested(transformer):
 def test_nested_multiple(transformer):
     expected = {"library": {"location": {"street": "123 Main St"}}}
 
-    actual = transformer.transform(spec=("library.location.street",))
+    spec = ("library.location.street",)
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
 
@@ -36,12 +38,11 @@ def test_multiple_nested(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.name",
-            "library.location.state",
-        )
+    spec = (
+        "library.name",
+        "library.location.state",
     )
+    actual = transformer.transform(spec=spec)
 
     assert actual == expected
 
@@ -57,12 +58,11 @@ def test_multiple_overridden(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.location",
-            "library.location.street",
-        )
+    spec = (
+        "library.location",
+        "library.location.street",
     )
+    actual = transformer.transform(spec=spec)
 
     assert actual == expected
 
@@ -78,12 +78,11 @@ def test_multiple_overridden_2(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.location.street",
-            "library.location",
-        )
+    spec = (
+        "library.location.street",
+        "library.location",
     )
+    actual = transformer.transform(spec=spec)
 
     assert actual == expected
 
@@ -102,12 +101,11 @@ def test_list(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.books.0.author",
-            "library.books.1.author",
-        )
+    spec = (
+        "library.books.0.author",
+        "library.books.1.author",
     )
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
 
@@ -126,12 +124,11 @@ def test_list_with_nested(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.books.0.author.last_name",
-            "library.books.1.author",
-        )
+    spec = (
+        "library.books.0.author.last_name",
+        "library.books.1.author",
     )
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
 
@@ -152,7 +149,8 @@ def test_entire_list(transformer):
         }
     }
 
-    actual = transformer.transform(spec=("library.books",))
+    spec = ("library.books",)
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
 
@@ -172,11 +170,10 @@ def test_list_with_index(transformer):
         }
     }
 
-    actual = transformer.transform(
-        spec=(
-            "library.books.0",
-            "library.books.1.author",
-        )
+    spec = (
+        "library.books.0",
+        "library.books.1.author",
     )
+    actual = transformer.transform(spec=spec)
 
     assert expected == actual
