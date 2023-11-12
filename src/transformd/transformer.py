@@ -6,16 +6,39 @@ from transformd.utils import is_int
 
 @typechecked
 class Transformer:
+    """Transforms a dictionary based on a `spec`."""
+
     def __init__(self, data: dict):
+        """Creates a new transformer with the `dictionary` data to later be transformed."""
+
         self.data = data
 
     def _get_specs(self, spec: str | tuple[str, ...] | list[str]) -> tuple[str, ...] | list[str]:
+        """Ensures that the passed-in spec is a list/tuple.
+
+        Args:
+            spec: The `dictionary` specification.
+
+        Returns:
+            A `spec` as a list/tuple.
+        """
+
         if isinstance(spec, str):
             return [spec]
 
         return spec
 
     def transform(self, spec: str | tuple[str, ...] | list[str]) -> dict:
+        """Transforms a dictionary based on a `spec` to keep the same "shape" of the original dictionary,
+        but only include the pieces of the dictionary that are specified with dot-notation.
+
+        Args:
+            spec: Specifies the parts of the `dictionary` to keep.
+
+        Returns:
+            A new `dictionary` with the specified shape based on the passed-in `spec`.
+        """
+
         transformed_data = {}
         specs = self._get_specs(spec)
 
