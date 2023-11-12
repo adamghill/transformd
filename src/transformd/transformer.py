@@ -4,6 +4,10 @@ from typeguard import typechecked
 from transformd.utils import is_int
 
 
+class InvalidSpecError(Exception):
+    pass
+
+
 @typechecked
 class Transformer:
     """Transforms a dictionary based on a `spec`."""
@@ -28,12 +32,14 @@ class Transformer:
 
         return spec
 
-    def transform(self, spec: str | tuple[str, ...] | list[str]) -> dict:
+    def transform(self, spec: str | tuple[str, ...] | list[str], ignore_invalid: bool = False) -> dict:
         """Transforms a dictionary based on a `spec` to keep the same "shape" of the original dictionary,
         but only include the pieces of the dictionary that are specified with dot-notation.
 
         Args:
             spec: Specifies the parts of the `dictionary` to keep.
+            ignore_invalid: Whether to ignore an invalid spec or not. Raises `InvalidSpecError`
+                if `False` and the spec is invalid. Defaults to `False`.
 
         Returns:
             A new `dictionary` with the specified shape based on the passed-in `spec`.
@@ -102,6 +108,8 @@ class Transformer:
 
                         new_data = new_data[piece]
                         current_data = current_data[piece]
+                elif ignore_invalid is False:
+                    raise InvalidSpecError(f"'{piece}' is invalid")
 
             # Specify the additive strategy so that nothing gets clobbered while merging
             merge(transformed_data, piece_data, strategy=Strategy.ADDITIVE)

@@ -3,6 +3,7 @@ from typeguard import TypeCheckError
 
 # Import any fixtures to be used in test functions
 from tests.transformer.fixtures import *  # noqa: F403
+from transformd import InvalidSpecError
 
 
 def test_invalid_type(transformer):
@@ -12,12 +13,18 @@ def test_invalid_type(transformer):
     assert 'argument "spec" (int) did not match any element in the union' in e.exconly()
 
 
-@pytest.mark.skip("For future")
 def test_invalid_spec(transformer):
-    with pytest.raises(AssertionError) as e:
-        transformer.transform(spec="library.blob")
+    with pytest.raises(InvalidSpecError) as e:
+        transformer.transform(spec="library.missing")
 
-    assert "Unknown key" in e.exconly()
+    assert "'missing' is invalid" in e.exconly()
+
+
+def test_invalid_spec_ignore_invalid(transformer):
+    expected = {"library": {}}
+    actual = transformer.transform(spec="library.missing", ignore_invalid=True)
+
+    assert expected == actual
 
 
 def test_whole_object_with_string_spec(transformer):
