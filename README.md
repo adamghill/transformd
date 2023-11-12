@@ -83,7 +83,9 @@ I needed this functionality for [`Unicorn`](https://www.django-unicorn.com), but
 
 ## Run tests
 
-`rye sync && rye run test`
+- Install [rye](https://rye-up.com)
+- `rye sync`
+- `rye run test`
 
 ## Inspiration
 
