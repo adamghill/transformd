@@ -1,5 +1,5 @@
-from transformd.transformer import DictionaryTransformer
+from transformd.transformer import Transformer
 
 __all__ = [
-    "DictionaryTransformer",
+    "Transformer",
 ]

@@ -1,92 +1,87 @@
-from typing import List, Tuple, Union
-
 from mergedeep import Strategy, merge
 from typeguard import typechecked
 
-from transformd.utils import is_int, is_non_string_sequence
+from transformd.utils import is_int
 
 
-class DictionaryTransformer:
+class Transformer:
     @typechecked
     def __init__(self, data: dict):
         self.data = data
 
+    def _get_specs(self, spec):
+        if isinstance(spec, str):
+            return [spec]
+
+        return spec
+
     @typechecked
-    def transform(self, spec: Union[str, Tuple[str], List[str]]) -> dict:
+    def transform(self, spec: str | tuple[str, ...] | list[str]) -> dict:
         transformed_data = {}
-        specs = []
+        specs = self._get_specs(spec)
 
-        if is_non_string_sequence(spec):
-            specs = spec
-        else:
-            specs = [spec]
+        for spec in specs:
+            current_data = self.data
+            piece_data = {}
+            new_data = {}
 
-        for field in specs:
-            field_dict = {}
-
-            sub_dict_data = self.data
-            sub_dict = {}
-            field_pieces = field.split(".")
+            # Break the spec into a list based on dots
+            pieces = spec.split(".")
 
             skip_idx = False
 
-            if len(field_pieces) == 1:
-                field_dict = sub_dict
+            if len(pieces) == 1:
+                piece_data = new_data
 
-            for idx, field_piece in enumerate(field_pieces):
+            for idx, piece in enumerate(pieces):
                 if skip_idx:
                     skip_idx = False
                     continue
 
                 if (
-                    field_piece in sub_dict_data
-                    and isinstance(sub_dict_data[field_piece], list)
-                    and len(field_pieces) >= idx + 2
-                    and is_int(field_pieces[idx + 1])
+                    piece in current_data
+                    and isinstance(current_data[piece], list)
+                    and len(pieces) >= idx + 2
+                    and is_int(pieces[idx + 1])
                 ):
                     # Handle this as referring to a list
-                    if field_piece not in sub_dict:
-                        sub_dict[field_piece] = []
+                    if piece not in new_data:
+                        new_data[piece] = []
 
                     # Handle the nested attribute inside the list
-                    if len(field_pieces) >= idx + 3:
-                        if field_dict == {}:
-                            field_dict.update(sub_dict)
-
+                    if len(pieces) >= idx + 3:
                         # Create one object and use index of 0 here because `mergedeep`
                         # will handle merging the nested lists together later
-                        sub_dict[field_piece].append({})
-                        sub_dict = sub_dict[field_piece][0]
+                        new_data[piece].append({})
+                        new_data = new_data[piece][0]
 
                         # Move the pointer to the object in the list
-                        list_idx = int(field_pieces[idx + 1])
-                        sub_dict_data = sub_dict_data[field_piece][list_idx]
+                        list_idx = int(pieces[idx + 1])
+                        current_data = current_data[piece][list_idx]
 
                         # Skip the next idx in the list because it specifies the index of the nested list
                         # which is already handled above
                         skip_idx = True
-                elif len(field_pieces) == idx + 1 and is_int(field_piece):
+                elif len(pieces) == idx + 1 and is_int(piece):
                     # Handles a list index, e.g. `books.0`
 
-                    list_field_piece = field_pieces[idx - 1]
-                    list_idx = int(field_piece)
+                    list_piece = pieces[idx - 1]
+                    list_idx = int(piece)
 
-                    sub_dict[list_field_piece].append(
-                        sub_dict_data[list_field_piece][list_idx]
-                    )
-                elif field_piece in sub_dict_data:
-                    if idx == len(field_pieces) - 1:
-                        sub_dict.update({field_piece: sub_dict_data[field_piece]})
+                    new_data[list_piece].append(current_data[list_piece][list_idx])
+                elif piece in current_data:
+                    if idx == len(pieces) - 1:
+                        new_data.update({piece: current_data[piece]})
                     else:
-                        sub_dict.update({field_piece: {}})
+                        new_data.update({piece: {}})
 
-                        if field_dict == {}:
-                            field_dict.update(sub_dict)
+                        if piece_data == {}:
+                            piece_data.update(new_data)
 
-                        sub_dict = sub_dict[field_piece]
-                        sub_dict_data = sub_dict_data[field_piece]
+                        new_data = new_data[piece]
+                        current_data = current_data[piece]
 
             # Specify the additive strategy so that nothing gets clobbered while merging
-            merge(transformed_data, field_dict, strategy=Strategy.ADDITIVE)
+            merge(transformed_data, piece_data, strategy=Strategy.ADDITIVE)
 
         return transformed_data
