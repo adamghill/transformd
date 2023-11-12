@@ -69,6 +69,6 @@ def process(data: dict, spec: str, ignore_invalid: bool = False) -> dict:
                 new_data = new_data[piece]
                 data = data[piece]
         elif ignore_invalid is False:
-            raise InvalidSpecError(f"'{piece}' is invalid")
+            raise InvalidSpecError(key=piece, data=data)
 
     return piece_data

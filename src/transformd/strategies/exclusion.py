@@ -22,14 +22,14 @@ def process(data: dict, spec: str, ignore_invalid: bool = False) -> None:
         piece = pieces[0]
 
         if piece not in data and not ignore_invalid:
-            raise InvalidSpecError()
+            raise InvalidSpecError(key=piece, data=data)
 
         del data[piece]
     elif len(pieces) == NESTED_PIECES_COUNT:
         (first_piece, second_piece) = pieces
 
         if first_piece not in data:
-            raise InvalidSpecError()
+            raise InvalidSpecError(key=first_piece, data=data)
 
         if data[first_piece] is not None:
             if second_piece in data[first_piece]:
@@ -39,7 +39,7 @@ def process(data: dict, spec: str, ignore_invalid: bool = False) -> None:
 
                 data[first_piece].pop(list_idx)
             elif not ignore_invalid:
-                raise InvalidSpecError()
+                raise InvalidSpecError(key=second_piece, data=data)
     elif len(pieces) > NESTED_PIECES_COUNT:
         next_piece_idx = spec.index(".") + 1
         remaining_spec = spec[next_piece_idx:]

@@ -20,6 +20,17 @@ def test_invalid_spec(transformer):
     assert "'missing' is invalid" in e.exconly()
 
 
+def test_invalid_spec_exception_has_data(transformer):
+    with pytest.raises(InvalidSpecError) as e:
+        transformer.transform(spec="library.missing")
+
+    expected_key = "missing"
+    assert expected_key == e.value.key
+
+    expected_data = transformer.data["library"]
+    assert expected_data == e.value.data
+
+
 def test_invalid_spec_ignore_invalid(transformer):
     expected = {"library": {}}
     actual = transformer.transform(spec="library.missing", ignore_invalid=True)
