@@ -71,10 +71,10 @@ assert Transformer(data).transform(spec=("library.books.0.title", "library.books
 
 # Exclude pieces from `data` by prefixing a spec with a dash
 assert Transformer(data).transform(spec=("-library.books", "-library.location")) == {
-        "library": {
-            "name": "Main St Library"
-        }
+    "library": {
+        "name": "Main St Library"
     }
+}
 ```
 
 ## Why?
