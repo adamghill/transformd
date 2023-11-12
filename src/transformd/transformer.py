@@ -4,18 +4,17 @@ from typeguard import typechecked
 from transformd.utils import is_int
 
 
+@typechecked
 class Transformer:
-    @typechecked
     def __init__(self, data: dict):
         self.data = data
 
-    def _get_specs(self, spec):
+    def _get_specs(self, spec: str | tuple[str, ...] | list[str]) -> tuple[str, ...] | list[str]:
         if isinstance(spec, str):
             return [spec]
 
         return spec
 
-    @typechecked
     def transform(self, spec: str | tuple[str, ...] | list[str]) -> dict:
         transformed_data = {}
         specs = self._get_specs(spec)
