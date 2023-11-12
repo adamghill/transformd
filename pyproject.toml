@@ -10,17 +10,26 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">= 3.10"
+requires-python = ">=3.10"
 readme = "README.md"
+license = {text = "MIT"}
 
 dependencies = [
     "mergedeep==1.3.4",
-    "typeguard==4.1.5"
+    "typeguard==4.1.5",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/adamghill/transformd"
 
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.4.3",
+]
+
+[tool.pdm.scripts]
+test = "pytest"
+
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
