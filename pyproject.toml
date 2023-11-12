@@ -1,7 +1,7 @@
 [project]
 name = "transformd"
 version = "0.1.0"
-description = "Transform dictionaries into whatever your heart desires"
+description = "Transform dictionaries into whatever your heart desires (as long as it's another dictionary that kind of looks like the original dictionary)"
 authors = [
     { name = "Adam Hill" }
 ]
