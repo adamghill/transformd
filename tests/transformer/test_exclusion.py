@@ -1,5 +1,35 @@
+import pytest
+
 # Import any fixtures to be used in test functions
-from tests.transformer.fixtures import *  # noqa: F403
+from tests.transformer.fixtures import *
+from transformd.exceptions import InvalidSpecError
+
+
+def test_invalid(transformer):
+    expected = "'missing' is invalid"
+
+    with pytest.raises(InvalidSpecError) as e:
+        transformer.transform(spec="-missing")
+
+    assert expected in e.exconly()
+
+
+def test_invalid_nested(transformer):
+    expected = "'missing' is invalid"
+
+    with pytest.raises(InvalidSpecError) as e:
+        transformer.transform(spec="-missing.name")
+
+    assert expected in e.exconly()
+
+
+def test_invalid_nested_2(transformer):
+    expected = "'missing' is invalid"
+
+    with pytest.raises(InvalidSpecError) as e:
+        transformer.transform(spec="-library.missing")
+
+    assert expected in e.exconly()
 
 
 def test_whole(transformer):

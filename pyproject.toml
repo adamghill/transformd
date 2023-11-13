@@ -32,9 +32,9 @@ dev-dependencies = [
 ]
 
 [tool.rye.scripts]
-test = "pytest"
 format = "ruff format ."
-cov = "pytest --cov=transformd"
+t = "pytest"
+tc = "pytest --cov=transformd --cov-report term-missing"
 
 [tool.ruff]
 src = ["src/transformd"]
