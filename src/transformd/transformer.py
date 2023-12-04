@@ -1,3 +1,5 @@
+from typing import Union
+
 from mergedeep import Strategy, merge
 from typeguard import typechecked
 
@@ -13,7 +15,7 @@ class Transformer:
 
         self.data = data
 
-    def _get_specs(self, spec: str | tuple[str, ...] | list[str]) -> tuple[str, ...] | list[str]:
+    def _get_specs(self, spec: Union[str, tuple[str, ...], list[str]]) -> Union[tuple[str, ...], list[str]]:
         """Ensures that the passed-in spec is a list/tuple.
 
         Args:
@@ -28,7 +30,7 @@ class Transformer:
 
         return spec
 
-    def transform(self, spec: str | tuple[str, ...] | list[str], ignore_invalid: bool = False) -> dict:
+    def transform(self, spec: Union[str, tuple[str, ...], list[str]], ignore_invalid: bool = False) -> dict:
         """Transforms a dictionary based on a `spec` to keep the same "shape" of the original dictionary,
         but only include the pieces of the dictionary that are specified with dot-notation.
 
