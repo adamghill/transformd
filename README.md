@@ -8,7 +8,7 @@ It is a string (or sequence of strings) that specifies which "parts" of the dict
 
 A `spec` uses dot-notation to specify how to traverse into the `dictionary`. It can also use indexes if the value of the `dictionary` is a list.
 
-Note: `Specs` are applied to the original `dictionary` in the order they are defined -- the `dictionary` gets updated after each spec.
+Note: `Specs` are applied to the original `dictionary` in the order they are defined.
 
 ## Examples
 
@@ -79,7 +79,7 @@ assert Transformer(data).transform(spec=("-library.books", "-library.location"))
 
 ## Why?
 
-I needed this functionality for [`Unicorn`](https://www.django-unicorn.com), but could not find a suitable library. After writing the code, I thought maybe it would be useful for someone else. 🤷
+I needed this functionality for [`Unicorn`](https://www.django-unicorn.com), but could not find a suitable library. After writing the code, I thought maybe it would be useful for someone else. 😎
 
 ## Run tests
 
