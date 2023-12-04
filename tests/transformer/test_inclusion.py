@@ -1,5 +1,6 @@
 # Import any fixtures to be used in test functions
 from tests.transformer.fixtures import *  # noqa: F403
+from transformd import Transformer
 
 
 def test_nested(transformer):
@@ -104,6 +105,42 @@ def test_list(transformer):
     spec = (
         "library.books.0.author",
         "library.books.1.author",
+    )
+    actual = transformer.transform(spec=spec)
+
+    assert expected == actual
+
+
+def test_first_key_is_list():
+    expected = {
+        "books": [
+            {
+                "author": {"first_name": "John"},
+            },
+            {
+                "author": {"last_name": "Vonnegut"},
+            },
+        ],
+    }
+
+    data = {
+        "books": [
+            {
+                "title": "The Grapes of Wrath",
+                "author": {"first_name": "John", "last_name": "Steinbeck"},
+            },
+            {
+                "title": "Slaughterhouse-Five",
+                "author": {"first_name": "Kurt", "last_name": "Vonnegut"},
+            },
+        ],
+    }
+
+    transformer = Transformer(data)
+
+    spec = (
+        "books.0.author.first_name",
+        "books.1.author.last_name",
     )
     actual = transformer.transform(spec=spec)
 

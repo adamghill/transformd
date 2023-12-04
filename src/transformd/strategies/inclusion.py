@@ -43,6 +43,10 @@ def process(data: dict, spec: str, ignore_invalid: bool = False) -> dict:
                 new_data[piece].append({})
                 new_data = new_data[piece][0]
 
+                if idx == 0:
+                    # If the first piece is an array, handle that specially
+                    piece_data.update({piece: [new_data]})
+
                 # Move the pointer to the object in the list
                 list_idx = int(pieces[idx + 1])
                 data = data[piece][list_idx]
